@@ -4,46 +4,83 @@ import serial
 import time
 import csv
 
-assets = []
-asset = {}
-tests = []
-test = {}
 
-def do_asset(data):
-    return
+class Test(object):
+    def __init__(self, data_csv):
+
+        return
 
 
-ser = serial.Serial('/dev/ttyS5')
-ser.dsrdtr = 1 # Enable hardware (RTS/CTS) flow control.
-ser.baudrate = 9600
-ser.bytesize = serial.EIGHTBITS
-ser.stopbits = serial.STOPBITS_ONE
-ser.parity = serial.PARITY_EVEN
-ser.timeout = 1.1
-try:
-    ser.open()
-except:
-    pass
-ser.flushInput()
-data = []
-ser.write('s\r'.encode())
-line = ser.readline().decode("utf-8").replace('\r\n', "")
-data.append(line)
-print line
-while line:
-    ser.write('\r'.encode())
-    line = ser.readline().decode("utf-8").replace('\r\n', "")
-    if line:
+class Asset(object):
+    def __init__(self, data_csv):
+        self.id = data_csv[1]
+        self.name = data_csv[3]
+        self.serial = data_csv[5]
+        self.tests = []
+        return
+
+
+class Megger(object):
+    def __init__(self):
+        self.assets = []
+        self.tests = []
+        data = self.download()
+        self.parse_data(data)
+        return
+
+    def parse_data(self, data):
+        for line in data:
+            data_csv = line.split(',')
+            print data_csv
+            #if data_csv == 'C':
+            #    asset = Assest(data_csv)
+            #    self.assets.append(asset)
+            if data_csv == 'D':
+                asset = Assest(data_csv)
+                self.assets.append(asset)
+            if data_csv == 'A':
+                test = Test(data_csv)
+                self.tests.append(test)
+
+    def download(self):
+        '''
+        Download the date from the PAT4
+        TODO; Don't hardcode the port.
+        '''
+        ser = serial.Serial('/dev/ttyS5')
+        ser.dsrdtr = 1 # Enable hardware (RTS/CTS) flow control.
+        ser.baudrate = 9600
+        ser.bytesize = serial.EIGHTBITS
+        ser.stopbits = serial.STOPBITS_ONE
+        ser.parity = serial.PARITY_EVEN
+        ser.timeout = 1.1
+        try:
+            ser.open()
+        except:
+            pass
+        ser.flushInput()
+        data = []
+        ser.write('s\r'.encode())
+        line = ser.readline().decode("utf-8").replace('\r\n', "")
         data.append(line)
         print line
-    else:
-        break
-ser.close()
+        while line:
+            ser.write('\r'.encode())
+            line = ser.readline().decode("utf-8").replace('\r\n', "")
+            if line:
+                data.append(line)
+                print line
+            else:
+                break
+        ser.close()
+        return data
 
-print "data follows:"
-for line in data:
-    csv = line.split(',')
-    if line[0] = 'D':
-        do_asset(line)
+def main():
+    megger = Megger()
 
 
+
+
+
+if __name__ == '__main__':
+    main()
