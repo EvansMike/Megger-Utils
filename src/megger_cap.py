@@ -1,25 +1,16 @@
 #!/bin/env python
 
+import csv
+import database
+import logging
 import serial
 import time
-import csv
 import xlwt
 
-
-class Test(object):
-    def __init__(self, data_csv):
-
-        return
-
-
-class Asset(object):
-    def __init__(self, data_csv):
-        self.id = data_csv[1]
-        self.name = data_csv[3]
-        self.serial = data_csv[5]
-        self.tests = []
-        return
-
+logging.basicConfig(format='%(module)s: LINE %(lineno)d: %(levelname)s: %(message)s', level=logging.DEBUG)
+#logging.disable(logging.INFO)
+DEBUG = logging.debug
+INFO = logging.info
 
 class Megger(object):
     def __init__(self):
@@ -30,12 +21,18 @@ class Megger(object):
         self.write_xls(data)
         return
 
+    def store_data(self,data):
+
+
+        return
+
     def write_xls(self, data):
+        db = database.Database()
         wb = xlwt.Workbook()
         ws1 = wb.add_sheet("Assets")
         ws2 = wb.add_sheet("Results")
         #ws3 = wb.add_sheet("Sites")
-        assets_header = ["Results", "Asset #", "Site","Asset ID", "Test", "Serial #", "Name", \
+        assets_header = ["Assets", "Asset #", "Site","Asset ID", "Test", "Serial #", "Name", \
             "Location", "TestDate", "Next Date", "TBT months", "VA", "?"]
         for c, heading in enumerate(assets_header):
             ws1.write(0,c,heading)
@@ -54,6 +51,7 @@ class Megger(object):
                 srow = drow.split(',')
                 sites_dict[srow[1]]  = srow[4]
             if drow.startswith('D,'): #  Assets
+                db.add_asset(drow)
                 d += 1
                 srow = drow.split(',')
                 if srow[2] in sites_dict:
@@ -62,6 +60,7 @@ class Megger(object):
                 for j, col in enumerate(tuple(srow)):
                     ws1.write(d, j, col)
             elif drow.startswith('A,'): # Test results
+                db.add_result(drow)
                 a += 1
                 srow = drow.split(',')
                 if srow[1] in assets_dict:
