@@ -25,13 +25,14 @@ class Megger(object):
         self.assets = []
         self.tests = []
         data = self.download()
+        self.save_to_file(data)
         self.parse_data(data)
         return
 
     def parse_data(self, data):
         for line in data:
             data_csv = line.split(',')
-            print data_csv
+            #print data_csv
             #if data_csv == 'C':
             #    asset = Assest(data_csv)
             #    self.assets.append(asset)
@@ -41,6 +42,13 @@ class Megger(object):
             if data_csv == 'A':
                 test = Test(data_csv)
                 self.tests.append(test)
+
+    def save_to_file(self, data):
+        fid = open('megger.csv', 'w')
+        for line in data:
+            fid.write(line + '\n')
+        fid.close()
+        return
 
     def download(self):
         '''
