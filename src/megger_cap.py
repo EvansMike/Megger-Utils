@@ -34,27 +34,33 @@ class Megger(object):
         wb = xlwt.Workbook()
         ws1 = wb.add_sheet("Assets")
         ws2 = wb.add_sheet("Results")
-        assets_header = ["Results", "Asset#", "","Asset ID", "Test", "Serial#", "Name", \
+        assets_header = ["Results", "Asset #", "Site #","Asset ID", "Test", "Serial #", "Name", \
             "Location", "TestDate", "Next Date", "TBT months", "VA", "?"]
         for c, heading in enumerate(assets_header):
             ws1.write(0,c,heading)
-        tests_header = ["Results", "Asset#","Test Date","","","","","Earth","Bond", \
-            "","Insulation M","VA", "E Leakage", "", "", "Repair#"]
+        tests_header = ["Results", "Asset ID","Test Date","Test #","User #","","","Earth","Bond", \
+            "","Insulation M","VA", "E Leakage", "", "Fault #", "Repair#"]
         for c, heading in enumerate(tests_header):
             ws2.write(0,c,heading)
         a = 0
         d = 0
+        assets_dict = {} # Number to ID mapping
         for drow in data:
-            if drow.startswith('D,'):
+            if drow.startswith('D,'): #  Assets
                 d += 1
                 srow = drow.split(',')
+                assets_dict[srow[1]]  = srow[3]
                 for j, col in enumerate(tuple(srow)):
                     ws1.write(d, j, col)
-            elif drow.startswith('A,'):
+            elif drow.startswith('A,'): # Test results
                 a += 1
                 srow = drow.split(',')
+                if srow[1] in assets_dict:
+                    srow[1] = assets_dict[srow[1]]
                 for j, col in enumerate(tuple(srow)):
                     ws2.write(a, j, col)
+
+
 
         wb.save("megger_data.xls")
         return
