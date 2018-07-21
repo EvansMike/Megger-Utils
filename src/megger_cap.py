@@ -34,7 +34,8 @@ class Megger(object):
         wb = xlwt.Workbook()
         ws1 = wb.add_sheet("Assets")
         ws2 = wb.add_sheet("Results")
-        assets_header = ["Results", "Asset #", "Site #","Asset ID", "Test", "Serial #", "Name", \
+        #ws3 = wb.add_sheet("Sites")
+        assets_header = ["Results", "Asset #", "Site","Asset ID", "Test", "Serial #", "Name", \
             "Location", "TestDate", "Next Date", "TBT months", "VA", "?"]
         for c, heading in enumerate(assets_header):
             ws1.write(0,c,heading)
@@ -44,11 +45,19 @@ class Megger(object):
             ws2.write(0,c,heading)
         a = 0
         d = 0
+        s = 0
         assets_dict = {} # Number to ID mapping
+        sites_dict = {} #
         for drow in data:
+            if drow.startswith('S,'): #  Sites
+                s += 1
+                srow = drow.split(',')
+                sites_dict[srow[1]]  = srow[4]
             if drow.startswith('D,'): #  Assets
                 d += 1
                 srow = drow.split(',')
+                if srow[2] in sites_dict:
+                    srow[2] = sites_dict[srow[2]]
                 assets_dict[srow[1]]  = srow[3]
                 for j, col in enumerate(tuple(srow)):
                     ws1.write(d, j, col)
