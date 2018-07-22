@@ -1,4 +1,5 @@
 import ConfigParser
+import logging
 import MySQLdb
 import MySQLdb.cursors
 import os
@@ -9,7 +10,11 @@ home = os.environ['HOME']
 config_file = home + "/.megger.cfg"
 config = ConfigParser.ConfigParser()
 config.read(config_file)
+warnings.filterwarnings('ignore', category=MySQLdb.Warning)
+DEBUG = logging.debug
+INFO = logging.info
 
+# Could use ON DUPLICATE KEY UPDATE
 
 class Database(object):
     def __init__(self):
@@ -29,6 +34,7 @@ class Database(object):
             "Location", "TestDate", "Next Date", "TBT months", "VA", "?"
         '''
         to_insert = asset.split(',')
+        # Insert ignoring duplicate keys
         self.cur.execute("INSERT IGNORE INTO assets(asset_num, site,asset_id, \
             test, serial, name, location, test_date, next_date, test_interval, VA, m1) \
             VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", \
@@ -42,8 +48,8 @@ class Database(object):
         '''
         '''
         to_insert = result.split(',')
-        print to_insert
-        self.cur.execute("INSERT IGNORE INTO results(asset_id,test_date, test_num, user_num, \
+        # Insert ignoring duplicate keys
+        self.cur.execute("INSERT IGNORE INTO results(asset_num,test_date, test_num, user_num, \
             m1, m2, e_bond_1, e_bond_2, m3, insulation, VA, e_leakage, m4, fault_num, repair_num ) \
             VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", \
             (to_insert[1],to_insert[2],to_insert[3],to_insert[4],to_insert[5], \

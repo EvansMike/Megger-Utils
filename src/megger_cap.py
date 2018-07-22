@@ -67,11 +67,9 @@ class Megger(object):
                     srow[1] = assets_dict[srow[1]]
                 for j, col in enumerate(tuple(srow)):
                     ws2.write(a, j, col)
-
-
-
         wb.save("megger_data.xls")
         return
+
 
     def parse_data(self, data):
         for line in data:
