@@ -2,6 +2,7 @@
 
 import csv
 import database
+from datetime import datetime
 import logging
 import serial
 import time
@@ -17,7 +18,6 @@ class Megger(object):
         self.assets = []
         self.tests = []
         data = self.download()
-        self.save_to_file(data)
         self.write_xls(data)
         return
 
@@ -58,7 +58,13 @@ class Megger(object):
                     srow[2] = sites_dict[srow[2]]
                 assets_dict[srow[1]]  = srow[3]
                 for j, col in enumerate(tuple(srow)):
+                    # Fix date strings
+                    if j == 8:
+                        col = datetime.strptime(col, '%d%m%y').strftime("%Y-%m-%d")
+                    if j == 9:
+                        col = datetime.strptime(col, '%d%m%y').strftime("%Y-%m-%d")
                     ws1.write(d, j, col)
+
             elif drow.startswith('A,'): # Test results
                 db.add_result(drow)
                 a += 1
@@ -66,8 +72,13 @@ class Megger(object):
                 if srow[1] in assets_dict:
                     srow[1] = assets_dict[srow[1]]
                 for j, col in enumerate(tuple(srow)):
+                    # Fix date strings
+                    if j == 2:
+                        col = datetime.strptime(col, '%d%m%y').strftime("%Y-%m-%d")
                     ws2.write(a, j, col)
-        wb.save("megger_data.xls")
+        if a > 0:
+            wb.save("megger_data.xls")
+            self.save_to_file(data)
         return
 
 
