@@ -36,8 +36,8 @@ class Megger(object):
             "Location", "TestDate", "Next Date", "TBT months", "VA", "?"]
         for c, heading in enumerate(assets_header):
             ws1.write(0,c,heading)
-        tests_header = ["Results", "Asset ID","Test Date","Test #","User #","","","Earth","Bond", \
-            "","Insulation M","VA", "E Leakage", "", "Fault #", "Repair#"]
+        tests_header = ["Results", "Asset ID","Test Date","Test Time","User #","","","EB1","EB2", \
+            "EB3","Insulation M","VA", "E Leakage", "", "Fault #", "Repair#"]
         for c, heading in enumerate(tests_header):
             ws2.write(0,c,heading)
         a = 0
@@ -99,6 +99,7 @@ class Megger(object):
             fid.write(line + '\n')
         fid.close()
         return
+
 
     def download(self):
         '''
