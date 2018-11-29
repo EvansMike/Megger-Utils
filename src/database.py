@@ -74,11 +74,11 @@ class Database(object):
         DEBUG(date)
         if string is None:
             self.cur.execute("SELECT  asset_id, test_date, next_date \
-                FROM assets WHERE test_date = %s ORDER BY asset_id", (date,))
+                FROM assets WHERE test_date >= %s ORDER BY asset_id", (date,))
         else:
             string = '%' + string + '%'
             self.cur.execute("SELECT  asset_id, test_date, next_date \
-                FROM assets WHERE test_date = %s AND asset_id LIKE %s ORDER BY asset_id", \
+                FROM assets WHERE test_date >= %s AND asset_id LIKE %s ORDER BY asset_id", \
                 (date, string))
         result = self.cur.fetchall()
         return result
