@@ -1,3 +1,30 @@
+#  database.py
+#
+#  Copyright 2018 Mike Evans <mikee@saxicola.co.uk>
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#
+#
+'''
+Database malarky for megger_cap(ture)
+I really should use sqlite more for this sort of thing as it's not always trivial
+to set up a MySQL database for potential users.
+'''
+
+
 import ConfigParser
 from datetime import datetime
 import logging
@@ -48,7 +75,8 @@ class Database(object):
             to_insert[6],to_insert[7],to_insert[8],to_insert[9],to_insert[10], \
             to_insert[11],to_insert[12]))
             print ("Adding new asset")
-        except: # Or update the asset with new data.
+        except MySQLdb.Error as e: # Or update the asset with new data.
+            #DEBUG(e)
             self.cur.execute("UPDATE assets SET site = %s, asset_id = %s, \
             test = %s, serial = %s, name = %s, location = %s, test_date = %s, next_date = %s, \
             test_interval = %s, VA = %s, m1 = %s WHERE asset_num = %s", \

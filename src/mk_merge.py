@@ -1,4 +1,11 @@
 #!/bin/env python
+'''
+Make a merge file to be used with glables to print on a Brother label printer.
+Output a csv file with the data relevant from the supplied date.
+Useage: mk_merge.py 2018-11-22 <string>
+An optional string can be supplies as a search string to restrict the returned results.
+
+'''
 
 import csv
 import database
@@ -21,8 +28,9 @@ DEBUG = logging.debug
 INFO = logging.info
 
 
-
-flab = open('label_merge.csv', 'w')
+flab = None
+if wild: flab = open('label_merge-'+ date + '_' + wild + '.csv', 'w')
+else: flab = open('label_merge-'+ date + '.csv', 'w')
 db = database.Database()
 DEBUG(date)
 if wild: data = db.get_merge_info(str(date), wild)
