@@ -14,7 +14,6 @@ import logging
 import serial
 import sys
 import time
-import xlwt
 
 date = None
 wild = None
