@@ -33,11 +33,6 @@ import MySQLdb.cursors
 import os
 import warnings
 
-
-home = os.environ['HOME']
-config_file = home + "/.megger.cfg"
-config = ConfigParser.ConfigParser()
-config.read(config_file)
 warnings.filterwarnings('ignore', category=MySQLdb.Warning)
 DEBUG = logging.debug
 INFO = logging.info
@@ -46,6 +41,14 @@ INFO = logging.info
 
 class Database(object):
     def __init__(self):
+        home = os.environ['HOME']
+        config_file = home + "/.megger.cfg"
+        config = ConfigParser.ConfigParser()
+        try:
+            config.read(config_file)
+        except:
+            print ('No configuration file present, or malformed file')
+            quit(1)
         db_user = config.get('database','USER')
         db_pass = config.get('database','PASSWD')
         db_base = config.get('database','DB')
