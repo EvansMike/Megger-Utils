@@ -39,14 +39,25 @@ class Database(object):
         DEBUG(str(to_insert[8]))
         to_insert[8] = datetime.strptime(str(to_insert[8]), '%d%m%y').strftime("%Y-%m-%d")
         to_insert[9] = datetime.strptime(str(to_insert[9]), '%d%m%y').strftime("%Y-%m-%d")
-        # Insert ignoring duplicate keys
-        self.cur.execute("INSERT IGNORE INTO assets(asset_num, site,asset_id, \
+        # Insert ignoring duplicate keys.
+        try:
+            self.cur.execute("INSERT INTO assets(asset_num, site, asset_id, \
             test, serial, name, location, test_date, next_date, test_interval, VA, m1) \
             VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", \
             (to_insert[1],to_insert[2],to_insert[3],to_insert[4],to_insert[5],\
             to_insert[6],to_insert[7],to_insert[8],to_insert[9],to_insert[10], \
             to_insert[11],to_insert[12]))
-        self.db.commit()
+            print ("Adding new asset")
+        except: # Or update the asset with new data.
+            self.cur.execute("UPDATE assets SET site = %s, asset_id = %s, \
+            test = %s, serial = %s, name = %s, location = %s, test_date = %s, next_date = %s, \
+            test_interval = %s, VA = %s, m1 = %s WHERE asset_num = %s", \
+            (to_insert[2],to_insert[3],to_insert[4],to_insert[5],\
+            to_insert[6],to_insert[7],to_insert[8],to_insert[9],to_insert[10], \
+            to_insert[11],to_insert[12], to_insert[1]))
+            print ("Updating assets")
+        finally:
+            self.db.commit()
 
 
     def add_result(self, result):
