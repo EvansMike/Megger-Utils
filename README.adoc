@@ -17,14 +17,20 @@ After creating the database, create the tables with:
 [source,bash]
 mysql megger -p < megger.sql
 
+Obviously, substitute your database name for "megger".
 
-== The Python Suite
+The database fields have been deduced from test data and not all fields have been decoded.  The "faults" table in particular is lacking in content. I assume the "repairs" table is user populated depending on your workflow.
+
+
+== The Python Scripts
 
 The Python files enable data download, database insertion and the creation of a merge file that can be used with label printing software, such as glabels.
+
 
 === megger_cap.py
 
 On the Megger PAT4 press COMMS, then SEND. The PAT will wait for a connection. Run megger_cap.py to download the data and insert it into the database.
+
 
 === mk_merge.py
 
@@ -36,3 +42,10 @@ Run this with a date and optional search string to create a merge file that can 
 This connects to the MySQl back-end and has various parts to enable the production of test reports.
 
 An ODBC data source (other types are available) will have to defined so that LibreOffice can connect to the backend.  Use whatever method is provided by your OS for this. Open PAT-data.odb and edit the database->Properties and database->Connection_Type to suite your setup. Some reports are provided but these are very basic at the moment and can be modified to suit.
+
+Note: Report builder in LibreOffice versions < 6.0 appear to be buggy and the headers are not printed.
+
+
+== Future and ToDo
+
+I'd like to get rid of the LibreOffice part and make this an entirely Python application. I probably won't though.
