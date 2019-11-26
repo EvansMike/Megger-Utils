@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/bin/env python2
 #  megger_cap.py
 #
 #  Copyright 2018 Mike Evans <mikee@saxicola.co.uk>
@@ -28,6 +28,8 @@ import logging
 import serial
 import time
 import xlwt
+
+PORT = '/dev/ttyS4'
 
 logging.basicConfig(format='%(module)s: LINE %(lineno)d: %(levelname)s: %(message)s', level=logging.DEBUG)
 #logging.disable(logging.INFO)
@@ -127,7 +129,7 @@ class Megger(object):
         Download the date from the PAT4
         TODO; Don't hardcode the port.
         '''
-        ser = serial.Serial('/dev/ttyS5')
+        ser = serial.Serial(PORT)
         ser.dsrdtr = 1 # Enable hardware (RTS/CTS) flow control.
         ser.baudrate = 9600
         ser.bytesize = serial.EIGHTBITS
