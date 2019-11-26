@@ -42,3 +42,6 @@ def main():
     except:
         pass
     flab.close()
+
+if __name__ == '__main__':
+    main()
