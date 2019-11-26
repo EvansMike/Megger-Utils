@@ -74,7 +74,7 @@ class Database(object):
             self.cur.execute("INSERT INTO assets(asset_num, site, asset_id, \
             test, serial, name, location, test_date, next_date, test_interval, VA, m1) \
             VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", \
-            (to_insert[1],to_insert[2],to_insert[3].strip('"') ,to_insert[4],to_insert[5],\
+            (to_insert[1],to_insert[2],to_insert[3].strip('"') ,to_insert[4].strip('"'),to_insert[5],\
             to_insert[6],to_insert[7],to_insert[8],to_insert[9],to_insert[10], \
             to_insert[11],to_insert[12]))
             print ("Adding new asset")
@@ -83,7 +83,7 @@ class Database(object):
             self.cur.execute("UPDATE assets SET site = %s, asset_id = %s, \
             test = %s, serial = %s, name = %s, location = %s, test_date = %s, next_date = %s, \
             test_interval = %s, VA = %s, m1 = %s WHERE asset_num = %s", \
-            (to_insert[2],to_insert[3].strip('"'),to_insert[4],to_insert[5],\
+            (to_insert[2],to_insert[3].strip('"'),to_insert[4].strip('"'),to_insert[5],\
             to_insert[6],to_insert[7],to_insert[8],to_insert[9],to_insert[10], \
             to_insert[11],to_insert[12], to_insert[1]))
             print ("Updating assets")
