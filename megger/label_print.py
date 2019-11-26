@@ -10,6 +10,10 @@ from reportlab.graphics import shapes
 import reportlab.lib.pagesizes
 from reportlab.platypus import  Table, TableStyle
 
+print("Don't use this! Use ../doc/pat_label.glabels instead.")
+quit(1)
+
+
 # Create an custom portrait  sheet with 3 columns and 7 rows of
 # labels. Each label is 90mm x 25mm with a 2mm rounded corner. The margins are
 # automatically calculated.
