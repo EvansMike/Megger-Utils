@@ -1,7 +1,11 @@
 = Megger PAT4 Utilities
 
-If you recently bought a used Megger PAT4 and baulk at the cost of the software then this could be for you. This will enable you to download the stored data into a MySQl database and use that data to print reports and test labels. There are restrictions, of course,
- as I've based this completely on my available hardware and software. Linux is a requirement. A file in you home directory is required named .megger.cfg, note the leading dot, and should have contents that look like:
+If you recently bought a used Megger PAT4 and baulk at the cost of the software then this could be for you. This will enable you to download the stored data into a MySQl database and use that data to print reports and test labels.
+
+Note that items tested with an uncalibrated Megger should not be passed on the public or the Megger used as part of a testing service.  I use it solely for stuff that I own and use personally.  If in doubt get it calibrated.
+
+There are restrictions, of course,
+ as I've based this completely on my available hardware and software. Linux is a requirement. A file in your home directory is required named .megger.cfg, note the leading dot, and should have contents that look like:
 
 [source,bash]
 [database]
