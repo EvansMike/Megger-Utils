@@ -1,14 +1,14 @@
 = The Fine Manual of Megger PAT4 Utilities
 
-If you recently bought a used Megger PAT4 and baulk at the cost of the software then this could be for you. 
+If you recently bought a used Megger PAT4 and baulk at the cost of the software then this could be for you.
 This will enable you to download the stored data into a MySQl database and use that data to print reports and test labels.
 
-Note that items tested with an uncalibrated Megger should not be passed on the public or the Megger used as part of a testing service.  
-I use it solely for stuff that I own and use personally.  
+Note that items tested with an uncalibrated Megger should not be passed on the public or the Megger used as part of a testing service.
+I use it solely for stuff that I own and use personally.
 If in doubt get it calibrated.
 
-There are restrictions, of course, as I've based this completely on my available hardware and software. 
-Linux is a requirement. 
+There are restrictions, of course, as I've based this completely on my available hardware and software.
+Linux is a requirement.
 A file in your home directory is required named .megger.cfg, note the leading dot, and should have contents that look like:
 
 [source,bash]
@@ -23,12 +23,13 @@ Of course change the data to reflect your setup.
 After creating the database, create the tables with:
 
 [source,bash]
-mysql megger -p < megger.sql
+mysql megger -p < megger_scm.sql
 
+in the megger sub-directory.
 Obviously, substitute your database name for "megger".
 
-The database fields have been deduced from test data and not all fields have been decoded.  
-The "faults" table in particular is lacking in content. 
+The database fields have been deduced from test data and not all fields have been decoded.
+The "faults" table in particular is lacking in content.
 I assume the "repairs" table is user populated depending on your workflow.
 
 
@@ -39,7 +40,7 @@ The Python files enable data download, database insertion and the creation of a 
 
 === megger_cap.py
 
-On the Megger PAT4 press COMMS, then SEND. The Megger will wait for a connection. 
+On the Megger PAT4 press COMMS, then SEND. The Megger will wait for a connection.
 Run megger_cap.py to download the data and insert it into the database.
 
 
@@ -52,9 +53,9 @@ Run this with a date and optional search string to create a merge file that can 
 
 This connects to the MySQl back-end and has various parts to enable the production of test reports.
 
-An ODBC data source (other types are available) will have to defined so that LibreOffice can connect to the backend.  
-Use whatever method is provided by your OS for this. 
-Open PAT-data.odb and edit the database->Properties and database->Connection_Type to suite your setup. 
+An ODBC data source (other types are available) will have to defined so that LibreOffice can connect to the backend.
+Use whatever method is provided by your OS for this.
+Open PAT-data.odb and edit the database->Properties and database->Connection_Type to suite your setup.
 Some reports are provided but these are very basic at the moment and can be modified to suit.
 
 Note: Report builder in LibreOffice versions < 6.0 appear to be buggy and the headers are not printed.
@@ -62,5 +63,5 @@ Note: Report builder in LibreOffice versions < 6.0 appear to be buggy and the he
 
 == Future and ToDo
 
-I'd like to get rid of the LibreOffice part and make this an entirely Python application. 
+I'd like to get rid of the LibreOffice part and make this an entirely Python application.
 I probably won't though.
