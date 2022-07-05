@@ -25,7 +25,7 @@ to set up a MySQL database for potential users.
 '''
 
 
-import ConfigParser
+import configparser
 from datetime import datetime
 import logging
 import MySQLdb
@@ -43,7 +43,7 @@ class Database(object):
     def __init__(self):
         home = os.environ['HOME']
         config_file = home + "/.megger.cfg"
-        config = ConfigParser.ConfigParser()
+        config = configparser.ConfigParser()
         try:
             config.read(config_file)
         except:

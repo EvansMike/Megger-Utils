@@ -145,13 +145,13 @@ class Megger(object):
         ser.write('s\r'.encode())
         line = ser.readline().decode("utf-8").replace('\r\n', "")
         data.append(line)
-        print line
+        print(line)
         while line:
             ser.write('\r'.encode())
             line = ser.readline().decode("utf-8").replace('\r\n', "")
             if line:
                 data.append(line)
-                print line
+                print(line)
             else:
                 break
         ser.close()
