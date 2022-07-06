@@ -1,4 +1,4 @@
-#!/bin/env python2
+#!/bin/env python3
 #  megger_cap.py
 #
 #  Copyright 2018 Mike Evans <mikee@saxicola.co.uk>

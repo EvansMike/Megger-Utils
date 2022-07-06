@@ -1,4 +1,4 @@
-#  database.py
+#  database.pyll
 #
 #  Copyright 2018 Mike Evans <mikee@saxicola.co.uk>
 #
@@ -47,7 +47,8 @@ class Database(object):
     def __init__(self):
         home = os.environ['HOME']
         config_file = home + "/.megger.cfg"
-        config = configparser.ConfigParser()
+        config = ConfigParser.ConfigParser()
+        #config = configparser.ConfigParser()
         try:
             config.read(config_file)
         except:
@@ -132,3 +133,6 @@ class Database(object):
 
     def create_tables(self):
         return
+
+if __name__ == '__main__':
+    db = Database()
