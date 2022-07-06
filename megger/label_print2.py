@@ -17,8 +17,8 @@ cols = 3
 #define column size and tweak it empirically
 columnsize=(131.0/rows) + 5.0
 
-print columnsize
-print columnsize*3
+print(columnsize)
+print(columnsize*3)
 
 # define serial number start
 serial=0
