@@ -24,8 +24,12 @@ I really should use sqlite more for this sort of thing as it's not always trivia
 to set up a MySQL database for potential users.
 '''
 
-
-import configparser
+import sys
+py_version = sys.version_info.major
+if py_version == 2:
+    import ConfigParser
+if py_version == 3:
+    import configparser as ConfigParser
 from datetime import datetime
 import logging
 import MySQLdb
