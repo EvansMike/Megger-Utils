@@ -33,9 +33,11 @@ The "faults" table in particular is lacking in content.
 I assume the "repairs" table is user populated depending on your workflow.
 
 
+
 == The Python Scripts
 
 The Python files enable data download, database insertion and the creation of a merge file that can be used with label printing software, such as glabels.
+
 
 
 === megger_cap.py
@@ -44,9 +46,12 @@ On the Megger PAT4 press COMMS, then SEND. The Megger will wait for a connection
 run megger_cap.py to download the data and insert it into the database.
 
 
+
 === mk_merge.py
 
 Run this with a date and optional search string to create a merge file that can be used with pat_label.glabels in glabels.
+The label data are from a DB query in database.py
+
 
 
 == The LibreOffice File
@@ -61,7 +66,8 @@ Some reports are provided but these are very basic at the moment and can be modi
 Note: Report builder in LibreOffice versions < 6.0 appear to be buggy and the headers are not printed.
 
 
-== Future and ToDo
 
-I'd like to get rid of the LibreOffice part and make this an entirely Python application.
-I probably won't though.
+== Future and TODO
+
+- I'd like to get rid of the LibreOffice part and make this an entirely Python application. I probably won't though.
+- An sqlite db my be easier for more casual users. If such a thing exists.
