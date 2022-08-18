@@ -1,13 +1,13 @@
--- MySQL dump 10.16  Distrib 10.2.18-MariaDB, for Linux (x86_64)
+-- MariaDB dump 10.19  Distrib 10.5.16-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: megger
 -- ------------------------------------------------------
--- Server version	10.2.18-MariaDB
+-- Server version	10.5.16-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -79,10 +79,10 @@ DROP TABLE IF EXISTS `repairs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `repairs` (
-  `repair_num` int(11) NOT NULL AUTO_INCREMENT,
-  `fault_num` varchar(100) NOT NULL,
+  `repair_num` int(11) NOT NULL,
+  `fault_num` int(11) DEFAULT NULL,
   `descrip` varchar(255) DEFAULT NULL,
-  `asset_id` varchar(12) NOT NULL,
+  `repair_cost` decimal(6,2) DEFAULT NULL,
   PRIMARY KEY (`repair_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -97,20 +97,20 @@ DROP TABLE IF EXISTS `results`;
 CREATE TABLE `results` (
   `asset_num` int(11) DEFAULT NULL,
   `test_date` date NOT NULL,
-  `test_num` int(11) NOT NULL,
+  `test_time` int(11) NOT NULL,
   `user_num` int(11) DEFAULT NULL,
   `m1` int(11) DEFAULT NULL,
   `m2` int(11) DEFAULT NULL,
   `e_bond_1` double DEFAULT NULL,
   `e_bond_2` double DEFAULT NULL,
-  `m3` varchar(100) DEFAULT NULL,
+  `e_bond_3` double DEFAULT NULL,
   `insulation` double DEFAULT NULL,
   `VA` double DEFAULT NULL,
   `e_leakage` double NOT NULL,
   `m4` varchar(100) DEFAULT NULL,
   `fault_num` varchar(100) DEFAULT NULL,
   `repair_num` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`test_date`,`test_num`)
+  PRIMARY KEY (`test_date`,`test_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -126,10 +126,26 @@ CREATE TABLE `sites` (
   `client_num` int(11) DEFAULT NULL,
   `m1` varchar(100) DEFAULT NULL,
   `site_name` varchar(100) DEFAULT NULL,
-  `m2` varchar(100) DEFAULT NULL,
-  `m3` varchar(100) DEFAULT NULL,
-  `m4` varchar(100) DEFAULT NULL,
+  `addr_1` varchar(100) DEFAULT NULL,
+  `addr_2` varchar(100) DEFAULT NULL,
+  `addr_3` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`site_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `name` text DEFAULT NULL,
+  `m1` text DEFAULT NULL,
+  `pass` varchar(4) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -142,4 +158,4 @@ CREATE TABLE `sites` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-14 10:36:17
+-- Dump completed on 2022-08-18 13:29:42
