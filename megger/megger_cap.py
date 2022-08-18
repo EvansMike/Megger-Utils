@@ -26,6 +26,7 @@ import database
 from datetime import datetime
 import logging
 import serial
+import sys
 import time
 import xlwt
 
@@ -50,6 +51,9 @@ class Megger(object):
         return
 
     def write_xls(self, data):
+        '''
+        And update the database
+        '''
         db = database.Database()
         wb = xlwt.Workbook()
         ws1 = wb.add_sheet("Assets")
@@ -70,10 +74,15 @@ class Megger(object):
         sites_dict = {} #
         for drow in data:
             if drow.startswith('S,'): #  Sites
+                db.add_site(drow)
                 s += 1
                 srow = drow.split(',')
                 sites_dict[srow[1]]  = srow[4]
-            if drow.startswith('D,'): #  Assets
+            elif drow.startswith('C,'): #  Client
+                db.add_client(drow)
+            elif drow.startswith('U,'): #  Users
+                db.add_user(drow)
+            elif drow.startswith('D,'): #  Assets
                 db.add_asset(drow)
                 d += 1
                 srow = drow.split(',')

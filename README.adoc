@@ -40,8 +40,8 @@ The Python files enable data download, database insertion and the creation of a 
 
 === megger_cap.py
 
-On the Megger PAT4 press COMMS, then SEND. The Megger will wait for a connection.
-Run megger_cap.py to download the data and insert it into the database.
+On the Megger PAT4 press COMMS, then SEND. The Megger will wait for a connection then
+run megger_cap.py to download the data and insert it into the database.
 
 
 === mk_merge.py

@@ -63,6 +63,64 @@ class Database(object):
         self.cur = self.db.cursor(MySQLdb.cursors.DictCursor)
         return
 
+
+    def add_site(self, data):
+        '''
+        S,6,3,"","HERE","17 CHURCH STREET","NARBERT","SA67 7BH
+        Bug-363 TODO
+        '''
+        to_insert = data.split(',')
+        try:
+            self.cur.execute("INSERT INTO sites(site_num, client_num, m1, site_name, addr_1, addr_2, addr_3) \
+                VALUES(%s, %s, %s, %s, %s, %s, %s)", \
+                (to_insert[1], to_insert[2], to_insert[3].strip('"'), to_insert[4].strip('"'), to_insert[5].strip('"'), to_insert[6].strip('"'), to_insert[7].strip('"')))
+            print ("Adding new site")
+        except MySQLdb.Error as e: # Or update the site with new data.
+            print(str(e))
+            self.cur.execute("UPDATE sites SET m1 = %s, site_name = %s, addr_1 = %s, addr_2 = %s, addr_3 = %s  \
+                WHERE site_num = %s", \
+                (to_insert[3].strip('"'), to_insert[4].strip('"'), to_insert[5].strip('"'), to_insert[6].strip('"'), to_insert[7].strip('"'), to_insert[1].strip('"')))
+        self.db.commit()
+
+
+
+    def add_client(self, data):
+        '''
+        C,3,"MILLSTREAM","17 CHURCH STREET","NARBERTH","SA67 7BH"
+        '''
+        to_insert = data.split(',')
+        try:
+            self.cur.execute("INSERT INTO clients(client_num, name, addr1, addr2, addr3) VALUES(%s, %s, %s, %s, %s)",\
+                (to_insert[1], to_insert[2].strip('"'), to_insert[3].strip('"'), to_insert[4].strip('"'), to_insert[5].strip('"')))
+            print ("Adding new client")
+        except MySQLdb.Error as e:
+            print(str(e))
+            self.cur.execute("UPDATE clients SET  name = %s, addr1 = %s, addr2 = %s, addr3 =%s  WHERE client_num = %s", \
+            (to_insert[2].strip('"'), to_insert[3].strip('"'), to_insert[4].strip('"'), to_insert[5].strip('"'), to_insert[1].strip('"')))
+            print (f"Updating client id: {to_insert[1]}")
+        self.db.commit()
+        return
+
+
+    def add_user(self,data):
+        '''
+        U,2,"MIKEE",0,"6658"
+        '''
+        to_insert = data.replace('"','').split(',')
+        INFO(to_insert)
+        try:
+            self.cur.execute("INSERT INTO users(id, name, m1, pass) \
+                VALUES(%s, %s, %s, %s)",\
+                (to_insert[1], to_insert[2], to_insert[3], to_insert[4]))
+            print(f"Added user: {to_insert[2]}")
+            self.db.commit()
+        except MySQLdb.Error as e:
+            self.cur.execute("UPDATE users SET name = %s, m1 = %s, pass= %s \
+                WHERE id = %s", (to_insert[2], to_insert[3], to_insert[4], to_insert[1]))
+            self.db.commit()
+        return
+
+
     def add_asset(self,asset):
         '''
         Db fields are
