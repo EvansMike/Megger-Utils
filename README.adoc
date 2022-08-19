@@ -3,9 +3,18 @@
 If you recently bought a used Megger PAT4 and baulk at the cost of the software then this could be for you.
 This will enable you to download the stored data into a MySQl database and use that data to print reports and test labels.
 
-Note that items tested with an uncalibrated Megger should not be passed on the public or the Megger used as part of a testing service.
+This information may also apply to other Megger products but since I only have the PAT4 I'll leave it to others to provide more data.
+
+Note that an uncalibrated tester should probably not be used as part of a PAT testing service.
 I use it solely for stuff that I own and use personally.
 If in doubt get it calibrated.
+
+Saying that, using a test box regularly seems to satisfy most requirements.
+Regular tests with a test box should return consistent data, deviation from the norm will indicate a fault somewhere.
+This does not imply the accuracy of the PAT machine in the same way as a calibration would.
+However, I'd say that a device that tests near the margins of failure should be rejected anyway.
+In my experience, devices fail completely or pass with huge margins.
+
 
 There are restrictions, of course, as I've based this completely on my available hardware and software.
 Linux is a requirement.
@@ -24,13 +33,156 @@ After creating the database, create the tables with:
 
 [source,bash]
 mysql megger -p < megger_scm.sql
+mysql megger -p < faults.sql
 
-in the megger sub-directory.
+Both are in the megger sub-directory.
 Obviously, substitute your database name for "megger".
 
 The database fields have been deduced from test data and not all fields have been decoded.
-The "faults" table in particular is lacking in content.
-I assume the "repairs" table is user populated depending on your workflow.
+I assume the "repairs" table will be user populated depending on your workflow.
+
+
+
+== Decoding The Data
+
+A look at the downloaded data (megger.csv) reveals each line has has a set of fields, the purpose of which can mostly be inferred.
+While most of the data types can be inferred by comparing a line with what we see on the LCD display, some are a less transparent.
+
+
+=== The G lines
+
+These refer to the test classes and look like:
+
+[source,bash]
+G,"SC1",2,"STD CLASS1",57,129,144,132,135,131,131
+
+The field values clearly refer to the test details for that equipment class.
+For my purposes theses are not important and would take more work to decode than I'm prepared to make.
+The G columns are imported in to the DB even though most fields are meaningless.
+
+For a print out direct from the PAT4 see LPT_capture project.
+https://gitlab.com/saxicola/lpt_capture
+This may reveal some more data as to how to map the values to something human readable.
+I should link that here or make it a sub-project.
+
+
+=== The D Lines
+
+These refer to the assets and look like:
+
+[source,bash]
+D,5,6,"TB1","P4A","","TEST BOX","1",050722,050822,1,5,122
+
+
+While field 6 is blank in this instance it refers to the assetserial number.
+The rest of the fields are mostly self explanatory.
+
+The database table for assets is:
+
+[source,sql]
++---------------+--------------+------+-----+---------+-------+
+| Field         | Type         | Null | Key | Default | Extra |
++---------------+--------------+------+-----+---------+-------+
+| asset_num     | int(11)      | NO   | PRI | NULL    |       |
+| site          | int(11)      | YES  |     | NULL    |       |
+| asset_id      | varchar(100) | NO   |     | NULL    |       |
+| test          | varchar(100) | YES  |     | NULL    |       |
+| serial        | varchar(100) | YES  |     | NULL    |       |
+| name          | varchar(100) | YES  |     | NULL    |       |
+| location      | varchar(100) | YES  |     | NULL    |       |
+| test_date     | date         | YES  |     | NULL    |       |
+| next_date     | date         | YES  |     | NULL    |       |
+| test_interval | varchar(100) | YES  |     | NULL    |       |
+| VA            | int(11)      | YES  |     | NULL    |       |
+| m1            | int(11)      | YES  |     | NULL    |       |
++---------------+--------------+------+-----+---------+-------+
+
+Fields designated as mN are mystery fields so far undetermined.
+The last m1 field are seen to contain the values, [200, 202, 218] the meaning of which in unknown, however:
+
+- 200 is always associated with SC2 test
+- 202 is always associated with SC1 test
+- 218 is always associated with EL1 test
+
+But what the mapping to fuse value is, is unclear.
+The manual says it's fuse rating, how this maps to the values shown is unclear as yet.
+
+
+
+=== The A Lines
+
+These are the test results and look like:
+
+[source,bash]
+A,121,130819,1134,1,57,255,0.059,-,-,>,0.000,0.00,-,-,0
+
+Some mystery fields in there still but the DB table is:
+
+[source,sql]
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| asset_num  | int(11)      | YES  |     | NULL    |       |
+| test_date  | date         | NO   | PRI | NULL    |       |
+| test_time  | time         | NO   | PRI | NULL    |       |
+| user_num   | int(11)      | YES  |     | NULL    |       |
+| m1         | int(11)      | YES  |     | NULL    |       |
+| m2         | int(11)      | YES  |     | NULL    |       |
+| e_bond_1   | double       | YES  |     | NULL    |       |
+| e_bond_2   | double       | YES  |     | NULL    |       |
+| e_bond_3   | double       | YES  |     | NULL    |       |
+| insulation | double       | YES  |     | NULL    |       |
+| VA         | double       | YES  |     | NULL    |       |
+| e_leakage  | double       | NO   |     | NULL    |       |
+| m4         | varchar(100) | YES  |     | NULL    |       |
+| fault_num  | varchar(3)   | YES  |     | NULL    |       |
+| repair_num | int(11)      | YES  |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+
+So mostly decoded.  The important result data are all there.
+Note that there is no test number to use as a primary key hence using test_date & test_time as the key.
+The field ordering above is the same as that in the CSV.
+Enough to give us a meaningful test result set for a report though.
+
+
+Repair codes are detailed on page 28 of the manual.
+The fault table in the DB is derived from that page and looks like:
+
+[source,sql]
++------+-------------------------+
+| code | descrip                 |
++------+-------------------------+
+|    0 | No fault                |
+|    1 | Replace internal fuse   |
+|    2 | Refit plug              |
+|    3 | Refit socket            |
+|    4 | Replace cable           |
+|    5 | Renew 415V 5 pin 16A    |
+|    6 | Renew 415V 4 pin 32A    |
+|    7 | Renew 415V 5 pin 32A    |
+|    8 | Renew IEC connector 6A  |
+|    9 | Renew IEC connector 10A |
+|   10 | Renew IEC connector 16A |
+|   11 | Replace main switch     |
+|   12 | Replace fuse holder     |
+|   13 | Replace missing screws  |
+|   14 | Replace warning labels  |
+|   15 | Renew 2core 1.00mm flex |
+|   16 | Renew 2core 1.50mm flex |
+|   17 | Renew 2core 2.50mm flex |
+|   18 | Renew 3core 0.75mm flex |
+|   19 | Renew 3core 1.00mm flex |
+|   20 | Renew 3core 1.50mm flex |
+|   21 | Renew 3core 2.50mm flex |
+|   22 | Tighten cord restraints |
+|   23 | Replace control knob    |
+|   24 | Tighten case fixings    |
+|   25 | Replace indicator lamps |
+|   26 | Replace case parts      |
++------+-------------------------+
+
+But what about multiple faults?
+Nope, me neither.
 
 
 
@@ -44,6 +196,9 @@ The Python files enable data download, database insertion and the creation of a 
 
 On the Megger PAT4 press COMMS, then SEND. The Megger will wait for a connection then
 run megger_cap.py to download the data and insert it into the database.
+The script as-is uses a real serial port on a Linux computer.
+It should work with a serial to USB but a NULL modem cable or "thing" will still be needed.
+Obviously port names will have to match your system/port designators.
 
 
 
