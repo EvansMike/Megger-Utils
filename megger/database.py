@@ -120,6 +120,25 @@ class Database(object):
             self.db.commit()
         return
 
+    def add_class(self, data):
+        '''
+        Add or update the  test_classes table
+        '''
+        to_insert = data.replace('"','').split(',')
+        INFO(to_insert)
+        try:
+            self.cur.execute("INSERT INTO test_classes(id, m1, name, m2, m3, m4, m5, m6, m7, m8) \
+            VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", \
+            (to_insert[1], to_insert[2], to_insert[3], to_insert[4], to_insert[5], \
+            to_insert[6], to_insert[7], to_insert[8], to_insert[9], to_insert[10]))
+        except MySQLdb.Error as e:
+            INFO(str(e))
+            self.cur.execute("UPDATE test_classes set m1 = %s, name = %s, m2 = %s, \
+                m3 = %s, m4 = %s, m5 = %s, m6 = %s, m7 = %s, m8 = %s WHERE id= %s",\
+                (to_insert[2], to_insert[3], to_insert[4], to_insert[5], to_insert[6], \
+                to_insert[7], to_insert[8], to_insert[9], to_insert[10], to_insert[1]))
+        self.db.commit()
+
 
     def add_asset(self,asset):
         '''
@@ -150,8 +169,7 @@ class Database(object):
             to_insert[6],to_insert[7],to_insert[8],to_insert[9],to_insert[10], \
             to_insert[11],to_insert[12], to_insert[1]))
             print ("Updating assets")
-        finally:
-            self.db.commit()
+        self.db.commit()
 
 
     def add_result(self, result):
@@ -161,6 +179,10 @@ class Database(object):
         # Fix the date string
         #DEBUG(str(to_insert[2]))
         to_insert[2] = datetime.strptime(str(to_insert[2]), '%d%m%y').strftime("%Y-%m-%d")
+        # Fix the time string
+        DEBUG(str(to_insert[3]))
+        to_insert[3] = datetime.strptime(str(to_insert[3]), '%H%M').strftime("%H:%M:%S")
+        DEBUG(str(to_insert[3]))
         # Insert ignoring duplicate keys
         self.cur.execute("INSERT IGNORE INTO results(asset_num,test_date, test_time, user_num, \
             m1, m2, e_bond_1, e_bond_2, e_bond_3, insulation, VA, e_leakage, m4, fault_num, repair_num ) \

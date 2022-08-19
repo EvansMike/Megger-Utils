@@ -82,6 +82,8 @@ class Megger(object):
                 db.add_client(drow)
             elif drow.startswith('U,'): #  Users
                 db.add_user(drow)
+            elif drow.startswith('G,'):
+                db.add_class(drow)
             elif drow.startswith('D,'): #  Assets
                 db.add_asset(drow)
                 d += 1
