@@ -64,10 +64,9 @@ DROP TABLE IF EXISTS `faults`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `faults` (
-  `fault_num` varchar(100) NOT NULL,
-  `descrip` varchar(255) NOT NULL,
-  `repair_num` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`fault_num`)
+  `code` int(11) NOT NULL,
+  `descrip` text DEFAULT NULL,
+  PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -83,6 +82,7 @@ CREATE TABLE `repairs` (
   `fault_num` int(11) DEFAULT NULL,
   `descrip` varchar(255) DEFAULT NULL,
   `repair_cost` decimal(6,2) DEFAULT NULL,
+  `asset_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`repair_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -108,8 +108,8 @@ CREATE TABLE `results` (
   `VA` double DEFAULT NULL,
   `e_leakage` double NOT NULL,
   `m4` varchar(100) DEFAULT NULL,
-  `fault_num` varchar(100) DEFAULT NULL,
-  `repair_num` varchar(100) DEFAULT NULL,
+  `fault_num` varchar(3) DEFAULT NULL,
+  `repair_num` int(11) DEFAULT NULL,
   PRIMARY KEY (`test_date`,`test_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -158,4 +158,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-08-18 13:29:42
+-- Dump completed on 2022-08-19 10:05:54
