@@ -17,9 +17,14 @@ import time
 
 date = None
 wild = None
-date = sys.argv[1]
-try: wild = sys.argv[2]
-except:pass
+try:
+    date = sys.argv[1]
+except:
+    date = datetime.today().strftime('%Y-%m-%d') # Default to today
+try:
+    wild = sys.argv[2]
+except:
+    pass
 
 logging.basicConfig(format='%(module)s: LINE %(lineno)d: %(levelname)s: %(message)s', level=logging.DEBUG)
 #logging.disable(logging.INFO)
