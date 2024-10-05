@@ -222,6 +222,12 @@ Note: Report builder in LibreOffice versions < 6.0 appear to be buggy and the he
 
 
 
+== Testing of computer, and other Power Bricks
+
+https://www.youtube.com/watch?v=QDLcp5w800g
+
+
+
 == Future and TODO
 
 - I'd like to get rid of the LibreOffice part and make this an entirely Python application. I probably won't though.
