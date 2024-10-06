@@ -26,6 +26,9 @@
 # All the data will be downloaded and inserted into the database, which you have already
 # created. Yes?
 
+# TODO Annoyingly some test use "-" as the no-fault tag and others use 0.
+# The data should be translated in transit to the DB, maybe.
+
 import csv
 import database
 from datetime import datetime
