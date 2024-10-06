@@ -19,18 +19,24 @@
 #  MA 02110-1301, USA.
 #
 #
-
+# Connect a Null modem cable to the 9 pin serial port on the Megger and to your computer.
+# Select COMMS on the megger.
+# Select SEND on the megger, the Megger will wait to send.
+# Run  ./megger_cap.py ttyUSB2 (with the correct port name).
+# All the data will be downloaded and inserted into the database, which you have already
+# created. Yes?
 
 import csv
 import database
 from datetime import datetime
 import logging
+import os
 import serial
 import sys
 import time
 import xlwt
 
-PORT = '/dev/ttyS4'
+PORT = '/dev/ttyUSB2'
 
 logging.basicConfig(format='%(module)s: LINE %(lineno)d: %(levelname)s: %(message)s', level=logging.DEBUG)
 #logging.disable(logging.INFO)
@@ -176,4 +182,5 @@ def main():
 
 
 if __name__ == '__main__':
+    PORT = os.path.join("/dev/", sys.argv[1])
     main()
